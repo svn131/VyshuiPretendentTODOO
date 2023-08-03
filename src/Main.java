@@ -2,10 +2,15 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+
         List<Integer[]> combinations = new ArrayList<>();   //@TODO здесь будут добавлены масивы чисел(уникальные комбинаций из 5 разных чесел) в количестве 100 шт рамдомно выбранные из 100 000 возможных комбинаций
+
         int successfulAttempts = 0;
 
+        int summaVsehPoputokZaVsyuIgru = 0;
+
         int igra = 0;
+
         while (igra < 1000) {  //@TODO  количество игр для 1 теста
             igra++;
             boolean ugadalis9 = true; //@TODO  была ли угадана комбинация с 9ти попыток измениться нна folse только когда будут истрачены все 9 попыток в одной из игр
@@ -110,6 +115,15 @@ public class Main {
                     ugadalis9 = false;
                     System.out.println("Вы выиграли! Количество попыток: " + poputka);
                     System.out.println(Arrays.toString(zagadanayaCombinaciya));
+
+
+                    summaVsehPoputokZaVsyuIgru = summaVsehPoputokZaVsyuIgru + poputka;
+
+                    if(igra == 1000){
+                        System.out.println("Сумма всех попыток " + summaVsehPoputokZaVsyuIgru);
+                    }
+
+
                     if (poputka <= 10) {
                         successfulAttempts++; //@TODO  общий подсчет выйграных игр из 1000 по умолчанию - тоесть где угадали до 10 попыток
                     }
@@ -179,7 +193,7 @@ public class Main {
 
                     if (count == 3) { //@TODO 3 совпадения говорит о том что любая комбинация имеющая 4ре совпадения редко но быть может и такое это всеже весомые числа из списка - проигрышна.
                         int[] masivNeskolkihSovpadenuy = new int[6];
-                        masivNeskolkihSovpadenuy[5] = 3; //5 индекс хранит в себе число совпадений с
+                        masivNeskolkihSovpadenuy[5] = 3; //@TODO 5 индекс хранит в себе число совпадений с
                         masivNeskolkihSovpadenuy[0] = vishuiPredentent[0];
                         masivNeskolkihSovpadenuy[1] = vishuiPredentent[1];
                         masivNeskolkihSovpadenuy[2] = vishuiPredentent[2];
@@ -208,7 +222,7 @@ public class Main {
 
                     if (count == 4) {
                         int[] masivNeskolkihSovpadenuy = new int[6];
-                        masivNeskolkihSovpadenuy[5] = 4; //5 индекс хранит в себе число совпадений с
+                        masivNeskolkihSovpadenuy[5] = 4; //@TODO 5 индекс хранит в себе число совпадений с
                         masivNeskolkihSovpadenuy[0] = vishuiPredentent[0];
                         masivNeskolkihSovpadenuy[1] = vishuiPredentent[1];
                         masivNeskolkihSovpadenuy[2] = vishuiPredentent[2];
@@ -244,12 +258,12 @@ public class Main {
                         System.out.println("Были удалены все комбинации, содержащие цифру " + num); //@TODO  закончиналь одна итерация цикла for
 
                     }
-                    combinations.remove(vishuiPredentent); //@TODO  удаляем высший придендент - почему не собрали для анализа данные ????
+                    combinations.remove(vishuiPredentent); //@TODO  удаляем высший придендент - так как тут совпадений нет это число нас не интересует для дальнейшего анализа -его мы не собираем в  masivNeskolkihSovpadenuy
 
 
-//@TODO  этам номер 2 новая сортировка
+//@TODO  этап номер 2 новая сортировка
 
-                    for (Integer[] combo : combinations) { //@TODO  для отладки вывод всего списка без сортировки после  редактирования
+                    for (Integer[] combo : combinations) { //@TODO  для отладки вывод всего списка без сортировки после  редактирования(удалений заранее проигрышных комбинаций)
                         for (int num : combo) {
                             System.out.print(num + " ");
                         }
@@ -257,21 +271,90 @@ public class Main {
                     }
 
                     System.out.println("Новая сортировка");
+
+
+                    // ниже  не обязательный код  - который понизил среднеее арефмитическое количество попыток на одну игру с 6.3 до 5.7 при таком-же выйгрыше  в 100% случаев
+
+
+
+                    if (listMasivovSovpadenuy.size() > 0) {
+                        for (Integer[] combo : combinations) {  //@TODO перебираем оставшиеся комбинации в списке в цикле
+                            int metkaPravdy = 0;
+                            for (int i = 0; i < listMasivovSovpadenuy.size(); i++) { //@TODO вложенный цикл - берем теперь  поочереди каждую комбинацию где были совпадения ранее - что бы сравнить их все с данной комбинацией на этой итерации из оставшегося списка - логика проста  выйгрышная комбинация должна иметь не меньшее количество совпадений чисел со списком listMasivovSovpadenuy - сколько оно имело выше при проверке в предыдущих попытках - ведь listMasivovSovpadenuy это числа из предыдущих попыток с указанием количества совпадений в них
+
+
+                                int[] masiv = listMasivovSovpadenuy.get(i);
+                                int kolSofpadenui = masiv[5]; //@TODO из комбинации вытаскиваем число - количество совпадений ранее см. выше
+                                int countsss = 0;
+
+                                for (int p = 0; p < 5; p++) {
+                                    if (Arrays.asList(combo).contains(masiv[p])) { //@TODO еще один вложеный во вложеный цикл - проверяем одну комбинацию из оставшегося списка на совпадение с нашей сохраненной комбинацие в который было  одно , два , три или четыри совпадения - информация об этом у нас храниться в int kolSofpadenui см выше
+                                        countsss++; //@TODO здесь считаем количество совпадений у данной комбинации в этой этерации из списка
+                                    }
+                                }
+                                if (countsss >= kolSofpadenui) {//@TODO  сравниваем у непроигрышноой комбинации должно быть совпадений не менее чем раньше - int kolSofpadenui
+                                    metkaPravdy++; //@TODO  помечает что данная комьинация combo - прошла проверку по количеству совпадений одной из комбинаций listMasivovSovpadenuy
+                                }
+
+                                if (metkaPravdy == listMasivovSovpadenuy.size()) { //@TODO высший притендет vishuiPreds в данном случае выйгрышная коомбинация  - будет присвоен только той комбинации из combo - которая пройдет все проверки из списка listMasivovSovpadenuy - который кокраз таки и был сохранен для этого маловероятного случая около 2 % когда мы не смогли угадать число с 9 попыток
+
+
+                                    int metkaLgy = 0;
+                                    for (int y = 0; y < listMasivovSovpadenuy.size(); y++) {
+                                        int[] masivLg = listMasivovSovpadenuy.get(i);
+                                        int kolNeSofpadenui = 5 - masiv[5]; //@TODO из комбинации вытаскиваем число - количество совпадений ранее см. выше
+                                        int countsssLg = 5;
+
+
+                                        for (int u = 0; u < 5; u++) {
+                                            if (Arrays.asList(combo).contains(masivLg[u])) { //@TODO еще один вложеный во вложеный цикл - проверяем одну комбинацию из оставшегося списка на совпадение с нашей сохраненной комбинацие в который было  одно , два , три или четыри совпадения - информация об этом у нас храниться в int kolSofpadenui см выше
+                                                countsssLg--; //@TODO здесь считаем количество совпадений у данной комбинации в этой этерации из списка
+                                            }
+
+                                            if (kolNeSofpadenui == countsssLg) {
+                                                metkaLgy++;
+                                            }
+                                            if (metkaLgy == listMasivovSovpadenuy.size()) {
+                                                vishuiPredentent = combo;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+                    //  выше не обязательный код  - который понизил среднеее арефмитическое количество попыток на одну игру с 6.3 до 5.7 при таком-же выйгрыше  в 100% случаев
+
+
+
+
+
                     Collections.sort(combinations, (combo1, combo2) -> {
                         int count1 = 0, count2 = 0;
                         for (int i = 0; i < 5; i++) {
                             count1 += counts[combo1[i]];
                             count2 += counts[combo2[i]];
                         }
-                        return count2 - count1; //@TODO сортировка из оставшихся чисел по анологии выше - а что если сюда добавить пересмотр  ценности комбинаций с учетом всех оставщихся чисел  и затем только сортировку ?????????????
+                        return count2 - count1; //@TODO сортировка из оставшихся чисел по анологии выше - в большенстве случаев не добовляет эффективности так как комбинации  лишь удалялись и не меняли свой порядок но иногда редко удаляються такие комбинации что сортировка просто необходима - и наче без нее может выйти за приделы 10 попыток.
                     });
 
-                    vishuiPredentent = combinations.get(0); //@TODO  теперь берем новый высший притендент на основе данной сортировки - да помойму она безполезна без преоценки ценности чисел на основе нового списка - так как остаеться то же порядок   ?????????????
-                    System.out.println("Высший прединтент: " + Arrays.toString(vishuiPredentent));
+
+
                 }
 
 
-            } //@TODO  здесь проходили циклы попыток с 1ой по 9ую
+
+            }
+                    //@TODO  выше проходили циклы попыток с 1ой по 9ую
+
+
 
             poputka = 9; //@TODO это утверждение основано на 95ой строке приложения -  while (count < 5 && poputka < 10) { тоесть выйдя из этого цикла у нас однозначно - poputka = 9;
 
@@ -358,6 +441,14 @@ public class Main {
 
                                 System.out.println("Вы выиграли! Количество попыток: " + poputka);
                                 System.out.println(Arrays.toString(zagadanayaCombinaciya));
+
+                                summaVsehPoputokZaVsyuIgru = summaVsehPoputokZaVsyuIgru + poputka;
+
+                                if(igra == 1000){
+                                    System.out.println("Сумма всех попыток " + summaVsehPoputokZaVsyuIgru);
+                                }
+
+
                                 if (poputka <= 10) { //@TODO  успешной считаеться игра только которая уложилась в 10ть попыток
                                     successfulAttempts++; //@TODO  переменная хранащая в себе количестов выйгранных игр по умолчанию из 1000
                                 } else {
